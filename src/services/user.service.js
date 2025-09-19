@@ -1,25 +1,13 @@
 const db = require('../models');
 const User = db.User; // Mengakses model User
-exports.createUser = async (userData) => {
-    const { name, email, password } = userData;
-    // Logika bisnis/validasi sederhana
+const bcrypt = require('bcrypt');
+const saltRounds = 10; // Nilai awal yang baik
+ const AppError = require('../utils/AppError');
 
-    if (!name || !email || !password) {
-        throw new Error('Nama, email, dan password harus diisi.');
-    }
-    // Interaksi dengan database menggunakan model Sequelize
-    // Di sini bisa ditambahkan logika hashing password sebelum create
-    const newUser = await User.create({ name, email, password });
-    return newUser;
-}
-
-exports.findAllUsers = async () => {
-    const users = await User.findAll();
-    return users;
-};
 
 exports.findUserById = async (id) => {
-    const user = await User.findByPk(id); // findByPk adalah singkatan dari findByPrimaryKey
+    if (!id) return null;
+    const user = await User.findByPk(id, { attributes: { exclude: ['password'] } }); // findByPk adalah singkatan dari findByPrimaryKey
     return user;
 }
 

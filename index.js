@@ -1,6 +1,7 @@
 const express = require('express');
 const db = require('./src/models');
 const userRoutes = require('./src/routes/user.routes');
+const authRoutes = require('./src/routes/auth.routes');
 const app = express();
 // Middleware untuk mem-parsing request body JSON
 app.use(express.json());
@@ -12,9 +13,10 @@ app.get('/', (req, res) => {
 });
 // Mendaftarkan user routes dengan prefiks /api/users
 app.use('/api/users', userRoutes);
+app.use('/api/auth', authRoutes);
 // db.sequelize.sync();
 // Sinkronisasi database (opsional, lebih baik menggunakan migrasi di produksi)
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Server berjalan di port $PORT.`);
+    console.log(`Server berjalan di port ${PORT}.`);
 });
