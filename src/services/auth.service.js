@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const { User } = require("../models");
+const { User, Streak } = require("../models");
 
 exports.loginUser = async (email, password) => {
     const user = await User.findOne({ where: {email} });
@@ -12,6 +12,44 @@ exports.loginUser = async (email, password) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
         throw new Error("Authentication failed. Invalid credentials.");
+    }
+
+    let streak = await Streak.findOne({ where: { userId: user.id } });
+    const today = new Date();
+    const todayDate = today.toISOString().slice(0, 10); // YYYY-MM-DD
+
+    if (!streak) {
+        // If no streak record, create one
+        streak = await Streak.create({
+            userId: user.id,
+            currentStreak: 1,
+            longestStreak: 1,
+            lastActive: todayDate
+        });
+    } else {
+        const lastActiveDate = streak.lastActive ? streak.lastActive.toISOString().slice(0, 10) : null;
+        if (lastActiveDate === todayDate) {
+            // Already logged in today, do nothing
+        } else {
+            // Check if last login was yesterday
+            const yesterday = new Date(today);
+            yesterday.setDate(today.getDate() - 1);
+            const yesterdayDate = yesterday.toISOString().slice(0, 10);
+
+            if (lastActiveDate === yesterdayDate) {
+                // Continue streak
+                streak.currentStreak += 1;
+            } else {
+                // Reset streak
+                streak.currentStreak = 1;
+            }
+            // Update longest streak if needed
+            if (streak.currentStreak > streak.longestStreak) {
+                streak.longestStreak = streak.currentStreak;
+            }
+            streak.lastActive = todayDate;
+            await streak.save();
+        }
     }
 
     const payload = { userId: user.id, role: user.role};

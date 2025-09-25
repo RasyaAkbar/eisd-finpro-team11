@@ -11,6 +11,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      models.User.hasOne(models.Streak, { foreignKey: 'userId', as: 'streak' });
+      models.User.hasMany(models.Badge, { foreignKey: 'userId', as: 'badges' });
+      models.User.hasMany(models.Comment, { foreignKey: 'userId', as: 'comments' });
     }
   }
   User.init({
@@ -21,7 +24,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.ENUM("user", "admin"),
       allowNull: false,
       defaultValue: "user",
-    }
+    },
+    badgeId: DataTypes.INTEGER,
+    challengeId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'User',

@@ -2,21 +2,28 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Users', {
+    await queryInterface.createTable('PhotoCards', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      name: {
+      imageUrl: {
         type: Sequelize.STRING
       },
-      email: {
+      caption: {
         type: Sequelize.STRING
       },
-      password: {
-        type: Sequelize.STRING
+      moduleId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+         // Pake unique ato gak??????
+        references: {
+          model: 'Modules',
+          key: 'id'
+        },
+        onDelete: 'CASCADE'
       },
       createdAt: {
         allowNull: false,
@@ -29,6 +36,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Users');
+    await queryInterface.dropTable('PhotoCards');
   }
 };
