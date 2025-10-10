@@ -22,7 +22,7 @@ exports.login = async (req, res) => {
         });
     } catch (error) {
         if (error.message.includes("Authentication failed")) {
-            res.status(401).json({ message: "Email atau password salah" });
+            res.status(401).json({ message: error.message });
         } else {
             res.status(500).json({ message: error.message });
         }
@@ -49,9 +49,9 @@ exports.register = async (req, res) => {
         })
     } catch (error) {
         if (error.message && error.message.includes("already exists")) {
-            return res.status(403).json({ message: "Email sudah terdaftar" });
+            return res.status(403).json({ message: error.message });
         } else {
-            return res.status(500).json({ message: "Terjadi kesalahan saat registrasi" });
+            return res.status(500).json({ message: error.message });
         }
     }
 };
