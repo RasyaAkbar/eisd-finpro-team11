@@ -4,8 +4,9 @@ const userRoutes = require('./src/routes/user.routes');
 const authRoutes = require('./src/routes/auth.routes');
 const commentRoutes = require('./src/routes/comment.routes');
 const challengeRoutes = require('./src/routes/challenge.route');
-const { swaggerUi, swaggerSpec } = require('./src/swagger');
+
 const cors = require('cors');
+const moduleRoutes = require('./src/routes/module.routes');
 
 const app = express();
 app.use(cors({
@@ -18,8 +19,8 @@ app.use(cors({
 app.use(express.json());
 // Middleware untuk mem-parsing request body URL-encoded
 app.use(express.urlencoded({ extended: true }));
-// Middleware untuk Swagger UI
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+
 // Route sederhana untuk pengujian awal
 app.get('/', (req, res) => {
     res.json({ message: 'Selamat datang di API aplikasi.' });
@@ -27,6 +28,7 @@ app.get('/', (req, res) => {
 // Mendaftarkan user routes dengan prefiks /api/users
 
 
+app.use('/api/modules', moduleRoutes);
 app.use('/api/comments', commentRoutes);
 app.use('/api/challenges', challengeRoutes);
 app.use('/api/users', userRoutes);
