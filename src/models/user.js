@@ -25,8 +25,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: "user",
     },
-    badgeId: DataTypes.INTEGER,
-    challengeId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'User',

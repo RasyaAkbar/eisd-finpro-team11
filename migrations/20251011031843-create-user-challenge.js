@@ -10,24 +10,10 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       userId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        unique: true,
-        references: {
-          model: 'Users',
-          key: 'id'
-        },
-        onDelete: 'CASCADE'
+        type: Sequelize.INTEGER
       },
       challengeId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        unique: true,
-        references: {
-          model: 'Challenges',
-          key: 'id'
-        },
-        onDelete: 'CASCADE'
+        type: Sequelize.INTEGER
       },
       status: {
         type: Sequelize.STRING
